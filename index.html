@@ -1,0 +1,48 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>Audiocontext Decode Audio Data</title>
+
+  </head>
+  <body>
+    <input id="audioFile" type="file" accept="audio/*" onchange="decode()">
+    <script>
+      var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      function decode() {
+        console.log("decode")
+
+        let fileInput = document.getElementById("audioFile");
+        let format = fileInput.files[0].type.split("/")[1];
+
+        // Create a file reader
+        var reader = new FileReader();
+        // Set the audio file once loaded into file reader
+        reader.onload = (e)=>{
+          // decode the audio data result to buffer
+          audioCtx.decodeAudioData(e.target.result, (buffer)=>{
+            console.log(buffer.numberOfChannels)
+            console.log(buffer.getChannelData(0))
+          }, (e)=>{ console.log("Error with decoding audio data" + e.err); });
+        }
+        reader.onerror = (e)=>{
+          console.log("ERROR : ",e)
+        }
+        // Load files into file reader
+        reader.readAsArrayBuffer(fileInput.files[0]);
+      }
+    </script>
+  </body>
+</html>
