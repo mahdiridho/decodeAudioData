@@ -9,7 +9,7 @@ On the folder audiofile, there is a sample wav file to be experimented.
 
 
 ## Run
-* Open the file index.html on browser
+* Open the file index.html on chrome browser
 * Select the audiofile/h.wav file
 * See the log result of channel data, will be like :
 
@@ -24,16 +24,6 @@ On the folder audiofile, there is a sample wav file to be experimented.
 7: 0.42484045028686523
 8: 0.12840349972248077
 9: -0.15169838070869446
-10: -0.27878567576408386
-11: -0.13389098644256592
-12: 0.07916242629289627
-13: 0.18276247382164001
-14: 0.11339849978685379
-15: -0.03214486315846443
-16: -0.11864637583494186
-17: -0.08897825330495834
-18: 0.006309896241873503
-19: 0.07485105097293854
 ...
 ```
 
@@ -51,16 +41,16 @@ sudo apt-get install octave
 octave-cli
 ```
 
-* Load the audio data into the vector h
+* Load the audio data
 
 ```
-> h=audioread('./audiofile/h.wav');
+> audioDump
 ```
 
-* Look at the first 20 sample points of the audio data on the octave console
+* Look at the fs and first 10 sample points of the audio data on the octave console
 
 ```
-> h(1:20)
+fs =  48000
 ans =
 
    1.000000
@@ -73,16 +63,6 @@ ans =
    0.389484
    0.336810
    0.057144
-  -0.204190
-  -0.268489
-  -0.131052
-   0.069502
-   0.179210
-   0.140048
-   0.010775
-  -0.098861
-  -0.115960
-  -0.047979
 ```
 
 
@@ -98,3 +78,17 @@ Both results are different and not identical nor scaled
 * Read the audio file as ArrayBuffer using FileReader web API
 * Decode the ArrayBuffer using AudioContext::decodeAudioData API
 * Print out the channel data using getChannelData()
+
+
+## Problem Solving
+1. We have to know the audio file sample rate before create audiocontext instance
+2. Once we know the audio file sample rate, set it on audiocontext initialization :
+
+```
+var audioCtx = new (window.AudioContext || window.webkitAudioContext)({
+  sampleRate: <audio_file_sample_rate>
+});
+```
+3. Now, we can decode the audio data through Audiocontext and get the same result as octave reference
+
+Note : Currently, the sampleRate of an AudioContext can only be set manually in Firefox and Chrome 74+

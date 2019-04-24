@@ -33,8 +33,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         reader.onload = (e)=>{
           // decode the audio data result to buffer
           audioCtx.decodeAudioData(e.target.result, (buffer)=>{
-            console.log(buffer.numberOfChannels)
-            console.log(buffer.getChannelData(0))
+            console.log(buffer.getChannelData(0).slice(0,10))
           }, (e)=>{ console.log("Error with decoding audio data" + e.err); });
         }
         reader.onerror = (e)=>{
